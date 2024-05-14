@@ -1,6 +1,6 @@
-def count_words(s):
+def count_words(word):
     counter = {}
-    for i in s:
+    for i in word:
         if i in counter:
             counter[i] += 1
         else:
@@ -21,18 +21,18 @@ def is_subset(dict_counter, word_counter):
             return False
     return True
 
-def search_anagram(s, dict):
-    word_counter = count_words(s)
+def search_anagram(word, dict):
+    word_counter = count_words(word)
     best_score = 0
     anagram = None
-    for i in dict:
-        sorted_i = "".join(sorted(i))
-        dict_counter = count_words(sorted_i)
-        if is_subset(dict_counter, word_counter) and s != i:
-            score = calculate_score(i)
+    for key in dict:
+        sorted_key = "".join(sorted(key))
+        dict_counter = count_words(sorted_key)
+        if is_subset(dict_counter, word_counter) and word != key:
+            score = calculate_score(key)
             if score > best_score:
                 best_score = score
-                anagram = i    
+                anagram = key
     return anagram
 
 input_src = input('input?' )
