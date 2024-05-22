@@ -10,6 +10,7 @@ import random, sys, time
 ###########################################################################
 
 # prime number checker
+# 2 から n-1 までの数で n が割り切れなければ素数
 def is_prime(n):
     for i in range(2, n, 1):
         if n % i == 0:
@@ -30,10 +31,10 @@ def calculate_hash(key):
     assert type(key) == str
     # Note: This is not a good hash function. Do you see why?
     hash = 0
-    index = 1
+    pivot = 1
     for i in key:
-        hash += ord(i) * index # Consider string ordering
-        index *= 37 # multiply a prime number
+        hash += ord(i) * pivot      # 文字が増えるごとに素数をかける
+        pivot *= 37                 # 　→衝突を軽減
     return hash
 
 # An item object that represents one key - value pair in the hash table.
@@ -88,7 +89,7 @@ class HashTable:
         self.item_count += 1
         # Check re-hashing is need?
         if self.item_count > self.bucket_size * 0.7:
-            self.rehash(find_prime(self.bucket_size * 2))
+            self.rehash(self.bucket_size * 2)
         return True
 
     # Get an item from the hash table.
@@ -128,7 +129,7 @@ class HashTable:
                 self.item_count -= 1
                 # Check re-hashing is need?
                 if self.item_count < self.bucket_size * 0.3 and self.bucket_size > 97:
-                    self.rehash(find_prime(max(97, self.bucket_size // 2)))
+                    self.rehash(self.bucket_size // 2)
                 return True
             prev = item
             item = item.next
@@ -149,7 +150,8 @@ class HashTable:
 
     # Put into a new bucket
     def rehash(self, new_size):
-        new_buckets = [None] * new_size
+        new_size_prime = find_prime(new_size)
+        new_buckets = [None] * new_size_prime
         for bucket in self.buckets:
             item = bucket
             while item:

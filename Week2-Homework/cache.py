@@ -23,13 +23,13 @@ def calculate_hash(url):
 class Webpage:
     def __init__(self, url, contents, next):
         self.url = url
-        self.content = contents
+        self.contents = contents
         self.next = next
 
 class Cache:
     def __init__(self, n):
         self.max_cache = n
-        self.cache = []
+        self.history = []
         self.bucket_size = 97
         self.buckets = [None] * self.bucket_size
 
@@ -41,8 +41,8 @@ class Cache:
         webpage = self.buckets[bucket_index]
         while webpage:
             if webpage.url == url:
-                self.cache.remove(webpage)
-                self.cache.insert(0, webpage)
+                self.history.remove(webpage)
+                self.history.insert(0, webpage)
                 return True
             webpage = webpage.next
         return False
@@ -62,15 +62,15 @@ class Cache:
         new_webpage = Webpage(url, contents, self.buckets[bucket_index])
         self.buckets[bucket_index] = new_webpage
 
-        if len(self.cache) >= self.max_cache:
-            self.cache.pop()
-        self.cache.insert(0, new_webpage)
+        if len(self.history) >= self.max_cache:
+            self.history.pop()
+        self.history.insert(0, new_webpage)
 
     # Return the URLs stored in the cache. The URLs are ordered in the order
     # in which the URLs are mostly recently accessed.
     def get_pages(self):
-        cache = self.cache
-        return [webpage.url for webpage in cache]
+        history = self.history
+        return [webpage.url for webpage in history]
 
 
 def cache_test():
