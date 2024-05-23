@@ -12,7 +12,9 @@ import random, sys, time
 # prime number checker
 # 2 から n-1 までの数で n が割り切れなければ素数
 def is_prime(n):
-    for i in range(2, n):
+    if n != 2 and n % 2 == 0:
+        return False
+    for i in range(3, n, 2):
         if n % i == 0:
             return False
     return True
