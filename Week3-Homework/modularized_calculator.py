@@ -17,7 +17,7 @@ def read_number(line, index):
 
 # 文字を読み取る
 # 入力された文字が一致していれば token に追加
-def read_character(line, index):
+def read_function(line, index):
     character = ""
     while index < len(line) and line[index].isalpha():
         character += line[index]
@@ -64,7 +64,7 @@ def tokenize(line):
         if line[index].isdigit():
             (token, index) = read_number(line, index)
         elif line[index].isalpha():
-            (token, index) = read_character(line, index)
+            (token, index) = read_function(line, index)
         elif line[index] == '+':
             (token, index) = read_plus(line, index)
         elif line[index] == '-':
@@ -104,7 +104,7 @@ def evaluate_brackets(tokens, start_index):
     return new_tokens, index
 
 # abs, int, round に対応
-def evaluate_absANDintANDround(tokens):
+def evaluate_abs_and_int_and_round(tokens):
     index = 0
     tokens, _ = evaluate_brackets(tokens, index)      # （） をなくした式にする。ここでは戻り値のindexはいらないので省略
     new_tokens = []
@@ -117,11 +117,11 @@ def evaluate_absANDintANDround(tokens):
                 if tokens[index]['number'] >= 0:
                     calculate_answer = tokens[index]['number']
                 else:
-                    calculate_answer = 0 - (tokens[index]['number'])
+                    calculate_answer = - (tokens[index]['number'])
                 new_tokens.append({'type': 'NUMBER', 'number': calculate_answer})
 
-        # 符号が正の時 → caluculate_answerが NUMBER以下の間 1ずつ足していく。ループを老けた後 -1 する。
-        # 符号が負の時 → caluculate_answerが NUMBER以上の間 1ずつ引いていく。ループを老けた後 +1 する。
+        # 符号が正の時 → caluculate_answerが NUMBER以下の間 1ずつ足していく。ループを抜けた後 -1 する。
+        # 符号が負の時 → caluculate_answerが NUMBER以上の間 1ずつ引いていく。ループを抜けた後 +1 する。
         elif tokens[index]['type'] == 'INT':
             index += 1
             if tokens[index]['type'] == 'NUMBER':
@@ -169,9 +169,9 @@ def evaluate_absANDintANDround(tokens):
 # tokenが NUMBER, PLUS(+), MINUS(-) であれば new_token に追加する
 # TIMES(*), DIVIDE(/) であれば new_token に入っている最新の数字を取り出す。
 # 取り出した数字(prev_number)と token の数字を計算し、結果を new_token に追加する
-def evaluate_timesANDdivide(tokens):
+def evaluate_times_and_divide(tokens):
     index = 0
-    tokens = evaluate_absANDintANDround(tokens)
+    tokens = evaluate_abs_and_int_and_round(tokens)
     new_tokens = []
 
     while index < len(tokens):
@@ -196,7 +196,7 @@ def evaluate_timesANDdivide(tokens):
 
 def evaluate(tokens):
     answer = 0
-    tokens = evaluate_timesANDdivide(tokens) # *, / を評価した後のtokensにする
+    tokens = evaluate_times_and_divide(tokens) # *, / を評価した後のtokensにする
     tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
     index = 1
   
@@ -246,6 +246,7 @@ def run_test():
     test("30/(15/3)")
     test("120/(6*(5-3))")
     test("2.0*(4+2*(8/(4.5-2.5)))")
+    test("abs(2.68)")
     test("abs(-2.68)")
     test("int(2.68)")
     test("int(-3.4)")
