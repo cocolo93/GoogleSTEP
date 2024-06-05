@@ -182,9 +182,11 @@ class Wikipedia:
             title = self.titles[id]
             if "索引_" not in title and linked_count[id] == 0 and link_count[id] == 0:
                 unconnected_pages[id] = title
-
-        for i in range(10):
-            print(random.choice(list(unconnected_pages.values())))
+        if len(unconnected_pages) > 10:
+            for i in range(10):
+                print(random.choice(list(unconnected_pages.values())))
+        else:
+            print(unconnected_pages.values())
         print("Total pages:" + str(len(unconnected_pages)))
         print()
 
