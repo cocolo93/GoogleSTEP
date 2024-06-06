@@ -135,6 +135,7 @@ class Wikipedia:
             answer[id] = 0.0
 
         while True:
+            print("計算中")
             distribution_to_all_nodes = 0       # 全てのノードに分配するページランク
 
             # 最初に全てのノードに分配する ページランクの15%を計算しておく
@@ -191,7 +192,7 @@ class Wikipedia:
             for i in range(10):
                 print(random.choice(list(unconnected_pages.values())))
         else:
-            print(unconnected_pages.values())
+            print(list(unconnected_pages.values()))
         print("Total pages:" + str(len(unconnected_pages)))
         print()
 
@@ -206,7 +207,7 @@ class Wikipedia:
         linking_pages = {}
 
         for id, link in self.links.items():
-            if target_id in link:
+            if target_id in link and self.titles[id] != "日本":
                 linking_pages[id] = link
 
         # titleは存在するが、targetにリンクしない場合
@@ -232,10 +233,9 @@ if __name__ == "__main__":
     wikipedia.find_most_linked_pages()
     wikipedia.find_shortest_path("渋谷", "パレートの法則")
     wikipedia.find_shortest_path("渋谷", "小野妹子")
-    wikipedia.find_most_popular_pages()
     wikipedia.find_no_link_and_linked_pages()
-    wikipedia.find_most_linked_pages_include_target_link("ページランク")
     wikipedia.find_most_linked_pages_include_target_link("Google")
     wikipedia.find_most_linked_pages_include_target_link("グラタン")
     wikipedia.find_most_linked_pages_include_target_link("びゃぼぼ")
     wikipedia.find_most_linked_pages_include_target_link("アジア月間")
+    wikipedia.find_most_popular_pages()
