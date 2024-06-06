@@ -180,8 +180,11 @@ class Wikipedia:
 
         for id in self.titles.keys():
             title = self.titles[id]
+            # 索引　_〇〇というページは省きます
             if "索引_" not in title and linked_count[id] == 0 and link_count[id] == 0:
                 unconnected_pages[id] = title
+
+
         if len(unconnected_pages) > 10:
             for i in range(10):
                 print(random.choice(list(unconnected_pages.values())))
@@ -191,17 +194,18 @@ class Wikipedia:
         print()
 
     # target がリンクされているページの中で最も他のページにリンクされているページを返す
-    # 
     def find_most_linked_pages_include_target_link(self, target):
         target_id = self.title_to_id.get(target)
+        # 入力されたtitleが存在しなければエラーを返す
         if target_id is None:
             print("Target page not found")
             return
 
         linking_pages = [src for src, links in self.links.items() if target_id in links]
-    
+
+        # titleは存在するが、targetにリンクしない場合
         if not linking_pages:
-            print("No target page.")
+            print("Target page is not linked")
             return
         
         most_linked_page = max(linking_pages, key=lambda id: self.linked_count[id])
@@ -228,4 +232,4 @@ if __name__ == "__main__":
     wikipedia.find_most_linked_pages_include_target_link("香水")
     wikipedia.find_most_linked_pages_include_target_link("Google")
     wikipedia.find_most_linked_pages_include_target_link("グラタン")
-    wikipedia.find_most_linked_pages_include_target_link("日本")
+    wikipedia.find_most_linked_pages_include_target_link("アジア月間")
