@@ -144,19 +144,21 @@ class Wikipedia:
             for id in prev_answer.keys():
                 if link_count[id] != 0:     # 隣接ノードがある場合
                     distribution_to_link_nodes = (prev_answer[id] * 0.85) / link_count[id]
+
                     # 隣接ノードに分配する
                     for link_node_id in self.links[id]:
                         answer[link_node_id] += distribution_to_link_nodes
 
                 else:       # 隣接ノードがない場合
                     distribution_to_all_nodes += prev_answer[id] * 0.85
+
             # 最初の 15%, 隣接ノードがなかった場合のページランクを全てのノードに分配
             for all_node_id in self.titles.keys():
                 answer[all_node_id] += distribution_to_all_nodes / all_node
 
-            # answer と prev_answer の全ての差が 0.00001以下になれば
+            # answer と prev_answer の全ての差が 0.01以下になれば
             # 収束したとみなし whileループを抜ける
-            if all(abs(answer[id] - prev_answer[id]) <= 0.00001 for id in answer.keys()):
+            if all(abs(answer[id] - prev_answer[id]) <= 0.01 for id in answer.keys()):
                 break
 
             # answer, prev_answerの初期化
@@ -181,7 +183,7 @@ class Wikipedia:
         for id in self.titles.keys():
             title = self.titles[id]
             # 索引　_〇〇というページは省きます
-            if "索引_" not in title and linked_count[id] == 0 and link_count[id] == 0:
+            if not title.startswith("索引_") and linked_count[id] == 0 and link_count[id] == 0:
                 unconnected_pages[id] = title
 
 
@@ -201,7 +203,11 @@ class Wikipedia:
             print("Target page not found")
             return
 
-        linking_pages = [src for src, links in self.links.items() if target_id in links]
+        linking_pages = {}
+
+        for id, link in self.links.items():
+            if target_id in link:
+                linking_pages[id] = link
 
         # titleは存在するが、targetにリンクしない場合
         if not linking_pages:
@@ -226,10 +232,10 @@ if __name__ == "__main__":
     wikipedia.find_most_linked_pages()
     wikipedia.find_shortest_path("渋谷", "パレートの法則")
     wikipedia.find_shortest_path("渋谷", "小野妹子")
-    #wikipedia.find_most_popular_pages()
+    wikipedia.find_most_popular_pages()
     wikipedia.find_no_link_and_linked_pages()
     wikipedia.find_most_linked_pages_include_target_link("ページランク")
-    wikipedia.find_most_linked_pages_include_target_link("香水")
     wikipedia.find_most_linked_pages_include_target_link("Google")
     wikipedia.find_most_linked_pages_include_target_link("グラタン")
+    wikipedia.find_most_linked_pages_include_target_link("びゃぼぼ")
     wikipedia.find_most_linked_pages_include_target_link("アジア月間")
