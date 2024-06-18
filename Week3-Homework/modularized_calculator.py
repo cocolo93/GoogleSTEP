@@ -91,7 +91,7 @@ def evaluate_brackets(tokens, start_index):
 
     while index < len(tokens):
         if tokens[index]['type'] == 'START':
-            calculate_ahead, new_index = evaluate_brackets(tokens, index + 1) # () がなくなるまでこの関数most_priority_evaluateが呼び出され,
+            calculate_ahead, new_index = evaluate_brackets(tokens, index + 1) # () がなくなるまでこの関数が呼び出され,
             calculate_ahead_answer = evaluate(calculate_ahead)                # evalate関数により()内の計算が行われる
             new_tokens.append({'type': 'NUMBER', 'number': calculate_ahead_answer})
             index = new_index
