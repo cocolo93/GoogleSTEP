@@ -106,7 +106,7 @@ def evaluate_brackets(tokens, start_index):
 # abs, int, round に対応
 def evaluate_abs_and_int_and_round(tokens):
     index = 0
-    tokens, _ = evaluate_brackets(tokens, index)      # （） をなくした式にする。ここでは戻り値のindexはいらないので省略
+    tokens, _ = evaluate_brackets(tokens, index)      # （） をなくした式にする。 ここでは戻り値のindexはいらないので省略
     new_tokens = []
 
     while index < len(tokens):
